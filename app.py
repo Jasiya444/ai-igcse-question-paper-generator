@@ -28,7 +28,7 @@ def get_db_connection():
     return mysql.connector.connect(
         host="localhost",
         user="root",        
-        password="J@siya123",        
+        password="YOURPASS",        
         database="igcse_db"
     )
 
