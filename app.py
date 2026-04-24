@@ -1,4 +1,3 @@
-
 from flask import Flask, request, jsonify, render_template, session, redirect, url_for, flash, send_file, send_from_directory
 from werkzeug.security import generate_password_hash
 import mysql.connector
@@ -15,13 +14,8 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from generate_paper import generate_paper_main
 
-
-
 app = Flask(__name__)
 app.secret_key = "J@siya123"
-
-
-
 
 # ---------------------- DATABASE CONNECTION ----------------------
 def get_db_connection():
@@ -87,7 +81,7 @@ def login():
             user["id"] = user.get("user_id") or user.get("uid")  # adjust to match your DB
             session["user"] = user
 
-            # ✅ Log user login activity
+            # Log user login activity
             log_user_action(user["id"], "Login")
 
             # Redirect based on role
@@ -117,7 +111,7 @@ def signup():
         address = request.form["address"]
 
         if password != confirm_password:
-            flash("❌ Passwords do not match!", "error")
+            flash("Passwords do not match!", "error")
             return render_template("signup.html")
 
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
@@ -132,7 +126,7 @@ def signup():
             conn.commit()
             flash("✅ Signup successful! Please login.", "success")
         except Exception as e:
-            flash(f"❌ Error: {str(e)}", "error")
+            flash(f"Error: {str(e)}", "error")
         finally:
             cursor.close()
             conn.close()
@@ -185,12 +179,12 @@ def forgot_password():
 # PROFILE ROUTE
 @app.route("/profile")
 def profile():
-    if "user" not in session:  # ✅ check dictionary key "user"
+    if "user" not in session: 
         return redirect(url_for("login"))
 
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM users WHERE user_id = %s", (session["user"]["user_id"],))  # ✅ use session["user"]["user_id"]
+    cursor.execute("SELECT * FROM users WHERE user_id = %s", (session["user"]["user_id"],)) 
     user = cursor.fetchone()
     cursor.close()
     conn.close()
@@ -883,9 +877,6 @@ def safe_int(value, default=30):
 # -----------------------------
 # GENERATE PAPER AFTER PAYMENT / FREE
 # -----------------------------
-# -----------------------------
-# GENERATE PAPER AFTER PAYMENT / FREE
-# -----------------------------
 def generate_paper_after_payment(user, data):
     # Determine watermark based on role
     role = user["role"].lower().strip()
@@ -1126,8 +1117,9 @@ def preview_paper(paper_id):
     pdf_url = paper["pdf_url"]  # must match path saved in DB
 
     return render_template("preview_paper.html", pdf_url=pdf_url, role=role)
-
-#view all paper
+#----------------
+# view all paper
+#----------------
 @app.route("/student/all_papers")
 def student_all_papers():
     if "user" not in session or session["user"]["role"].lower() != "student":
