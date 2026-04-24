@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="dashboard">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <h2>Admin Panel</h2>
+      <a href="{{ url_for('dashboard') }}">🏠 Dashboard</a>
+      <a href="{{ url_for('manage_users') }}"><i>👤</i> Manage Users</a>
+      <a href="{{ url_for('manage_papers') }}"><i>📄</i> Manage Papers</a>
+      <a href="{{ url_for('manage_payments') }}"><i>💳</i> Manage Payments</a>
+      <a href="{{ url_for('logout') }}"><i>🚪</i> Logout</a>
+    </div>
+
+    <!-- Main content -->
+    <div class="main-content">
+      <div class="topbar">
+        <div class="welcome">Welcome, {{ user.name }}</div>
+        <div class="actions">
+          <a class="btn-sm primary" href="{{ url_for('logout') }}">Logout</a>
+        </div>
+      </div>
+
+      <!-- KPI Cards -->
+      <div class="cards">
+        <div class="card">
+          <h3>Total Users</h3>
+          <p>{{ stats.total_users }}</p>
+        </div>
+        <div class="card">
+          <h3>Papers Generated</h3>
+          <p>{{ stats.papers_generated }}</p>
+        </div>
+        <div class="card">
+          <h3>Payments</h3>
+          <p>₹{{ stats.total_payments }}</p>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <!-- Quick Actions -->
+        <div class="card">
+          <h3>Quick Actions</h3>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li><a class="btn-sm primary" href="{{ url_for('manage_users') }}"> Manage Users</a></li><br>
+            <li><a class="btn-sm primary" href="{{ url_for('upload_paper') }}"> Upload Paper</a></li><br>
+            <li><a class="btn-sm primary" href="{{ url_for('manage_papers') }}"> Manage Papers</a></li><br>
+            <li><a class="btn-sm primary" href="{{ url_for('manage_payments') }}"> View Payments</a></li><br>
+          </ul>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="card">
+          <h3>Recent Activity</h3>
+          {% if recent_activity %}
+            <ul>
+              {% for log in recent_activity %}
+                <li>
+                  {{ log.created_at.strftime('%d %b %Y %H:%M') }} - {{ log.name }}:
+                  {{ log.action if log.action else 'No activity recorded' }}
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p>No recent activity.</p>
+          {% endif %}
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+</body>
+</html>

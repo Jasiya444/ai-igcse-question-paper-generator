@@ -1,0 +1,86 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <title>Upload Paper - Admin Panel</title>
+  <style>
+    /* General Page Style */
+    
+
+    /* Container */
+    .edit-user-container {
+      background: #fff;
+      padding: 30px 35px;
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+      width: 400px;
+      text-align: center;
+    }
+
+    .edit-user-container h2 {
+      margin-bottom: 20px;
+      color: #333;
+      font-size: 24px;
+    }
+
+    /* Form Styling */
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      text-align: left;
+    }
+
+    label {
+      font-size: 14px;
+      font-weight: bold;
+      color: #444;
+    }
+
+    input, select {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    input:focus, select:focus {
+      border-color: #007bff;
+    }
+
+
+
+    /* Responsive Design */
+    @media (max-width: 480px) {
+      .edit-user-container {
+        width: 90%;
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="edit-user-container">
+    <h2>Edit User</h2>
+    <form method="POST">
+      <label>Name:</label>
+      <input type="text" name="name" value="{{ user.name }}" required>
+
+      <label>Email:</label>
+      <input type="email" name="email" value="{{ user.email }}" required>
+
+      <label>Role:</label>
+      <select name="role" required>
+        <option value="institute" {% if user.role == 'institute' %}selected{% endif %}>Institute</option>
+        <option value="student" {% if user.role == 'student' %}selected{% endif %}>Student</option>
+      </select>
+
+      <button id="btn-generate" type="submit">Update</button>
+    </form>
+    <br>
+    <a href="{{ url_for('manage_users') }}" class="btn-sm">← Back to Manage Users</a>
+  </div>
+</body>
+</html>

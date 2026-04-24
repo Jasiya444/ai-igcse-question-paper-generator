@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>User Profile</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="profile-container">
+    <!-- Avatar (first letter of name or icon) -->
+    <div class="avatar">
+      {{ user.name[0]|upper }}
+    </div>
+    <h2>{{ user.name }}</h2>
+
+    <div class="profile-info">
+      <p><strong>Email:</strong> {{ user.email }}</p>
+      <p><strong>Role:</strong> {{ user.role }}</p>
+      <p><strong>Contact:</strong> {{ user.contact }}</p>
+      <p><strong>Address:</strong> {{ user.address }}</p>
+      <p><strong>Created At:</strong> {{ user.created_at }}</p>
+    </div>
+
+    <a href="{{ url_for('dashboard') }}" class="btn-generate">⬅ Back to Dashboard</a>
+  </div>
+</body>
+</html>

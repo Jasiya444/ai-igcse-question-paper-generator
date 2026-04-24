@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Papers - {{ user.name }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <div class="dashboard">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h2>IGCSE AI Papers</h2>
+      {% if user.role.lower() == 'institute' %}
+        <a href="{{ url_for('institute_dashboard') }}"><i class="fas fa-home"></i> Dashboard</a>
+      {% else %}
+        <a href="{{ url_for('student_dashboard') }}"><i class="fas fa-home"></i> Dashboard</a>
+      {% endif %}
+      <a href="#"><i class="fas fa-file-alt"></i> Generate Paper</a>
+      <a href="#"><i class="fas fa-clock"></i> Recent Papers</a>
+      <a href="/settings"><i class="fas fa-cog"></i> Settings</a>
+      <a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="topbar">
+        <div class="welcome">All Papers by {{ user.name }}</div>
+        <div class="actions">
+          <a href="{{ url_for('profile') }}"><button class="btn-sm">Profile</button></a>
+          <a href="{{ url_for('logout') }}" class="btn-sm primary" onclick="return confirm('Are you sure you want to logout?')">Logout</a>
+        </div>
+      </div>
+
+      <!-- All Papers Table -->
+      <section class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Subject</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if papers %}
+              {% for paper in papers %}
+              <tr>
+                <td>{{ paper.subject }}</td>
+                <td>{{ paper.generated_at.strftime('%d %b %Y %H:%M') if paper.generated_at else '' }}</td>
+                <td><span class="status-badge">{{ paper.status }}</span></td>
+                <td>
+                  <a href="{{ url_for('preview_paper', paper_id=paper.paper_id) }}" class="btn-sm">Preview</a>
+                  {% if paper.pdf_url %}
+                  <a href="{{ paper.pdf_url }}" class="btn-sm" download>Download</a>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            {% else %}
+              <tr>
+                <td colspan="4" style="text-align:center;">No papers generated yet.</td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+
+        {% if user.role.lower() == 'institute' %}
+        <a href="{{ url_for('institute_dashboard') }}" class="btn-sm">← Back to Dashboard</a>
+        {% else %}
+        <a href="{{ url_for('student_dashboard') }}" class="btn-sm">← Back to Dashboard</a>
+        {% endif %}
+      </section>
+    </main>
+  </div>
+</body>
+</html>

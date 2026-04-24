@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Institute Dashboard - IGCSE AI Paper Generator</title>
+
+  <!-- External CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <div class="dashboard">
+    
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h2>IGCSE AI Papers</h2>
+      <a href="{{ url_for('institute_dashboard') }}"><i class="fas fa-home"></i> Dashboard</a>
+      <a href="{{ url_for('institute_dashboard') }}"><i class="fas fa-file-alt"></i> Generate Paper</a>
+      <a href="{{ url_for('institute_all_papers') }}"><i class="fas fa-clock"></i> Recent Papers</a>
+      <a href="/settings"><i class="fas fa-cog"></i> Settings</a>
+      <a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <!-- Topbar -->
+      <div class="topbar">
+        <div class="welcome">Welcome, {{ user.name }}</div>
+        <div class="actions">
+          <a href="{{ url_for('profile') }}">
+            <button class="btn-sm">Profile</button>
+          </a>
+          <a href="{{ url_for('logout') }}" class="btn-sm primary" onclick="return confirmLogout()">Logout</a>
+        </div>
+      </div>
+
+      <!-- KPI Cards -->
+      <div class="cards">
+        <div class="card">
+          <h3>Total Papers</h3>
+          <p>{{ stats.total_papers }}</p>
+        </div>
+        <div class="card">
+          <h3>Subjects</h3>
+          <p>{{ stats.subjects }}</p>
+        </div>
+        <div class="card">
+          <h3>Premium Status</h3>
+          <p>{{ stats.premium_status }}</p>
+        </div>
+      </div>
+
+      <!-- Generator + Recent -->
+      <div class="grid-2">
+
+        <!-- Paper Generator -->
+        <section class="card">
+          <h3>Generate New Paper</h3>
+          <form id="paperForm" method="POST" action="{{ url_for('request_generate_paper') }}">
+
+            <!-- Flash messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, msg in messages %}
+                  <div class="flash inline {{ category }}">{{ msg }}</div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+
+            <div class="form-row">
+              <div>
+                <label for="subject">Subject</label>
+                <select name="subject" id="subject" required>
+                  <option value="">--Select Subject--</option>
+                  <option value="maths">Mathematics</option>
+                  <option value="biology">Biology</option>
+                </select>
+              </div>
+              <div>
+                <label for="years">Years Range</label>
+                <input type="number" id="years" name="years" min="1" max="10" value="10">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div>
+                <label for="marks">Total Marks</label>
+                <input type="number" id="marks" name="marks" min="10" step="5" value="70">
+              </div>
+              <div>
+                <label for="watermark">Watermark</label>
+                <input type="text" id="watermark" name="watermark" placeholder="e.g. MyInstitute">
+              </div>
+            </div>
+
+            <button type="submit" id="btn-generate">Generate Paper</button>
+          </form>
+
+        </section>
+
+        <!-- Recent Papers -->
+        <section class="table-wrap">
+          <div class="header-row">
+            <h3>Recent Papers</h3>
+            <a href="{{ url_for('institute_all_papers') }}" class="btn-sm">View All</a>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Subject</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for paper in recent_papers %}
+              <tr>
+                <td>{{ paper.subject }}</td>
+                <td>{{ paper.date.strftime('%d %b %Y') if paper.date else '' }}</td>
+                <td><span class="status-badge">{{ paper.status }}</span></td>
+                <td>
+                  <a href="{{ url_for('preview_paper', paper_id=paper.paper_id) }}" class="btn-sm">Preview</a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+
+          </table>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <script>
+    function confirmLogout() {
+      return confirm("Are you sure you want to logout?");
+    }
+  </script>
+</body>
+</html>

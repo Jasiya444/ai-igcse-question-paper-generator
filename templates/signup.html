@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signup Page</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+<body>
+
+  <div class="wrapper">
+    <h1>Register</h1>
+
+    <!-- Flash messages (inside wrapper only) -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          {% if category in ["signup_success", "signup_error"] %}
+            <div class="flash {{ category }}">{{ message }}</div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form action="/signup" method="POST">
+      <!-- Full Name -->
+      <div class="input-box">
+        <input type="text" name="name" placeholder="Full Name" required>
+        <i class='bx bxs-user'></i>
+      </div>
+
+      <!-- Email -->
+      <div class="input-box">
+        <input type="email" name="email" placeholder="Email" required>
+        <i class='bx bxs-envelope'></i>
+      </div>
+
+      <!-- Password -->
+      <div class="input-box">
+        <input type="password" name="password" placeholder="Password" required>
+        <i class='bx bxs-lock-alt'></i>
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="input-box">
+        <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+        <i class='bx bxs-lock'></i>
+      </div>
+
+      <!-- Address -->
+      <div class="input-box">
+        <input type="text" name="address" placeholder="Address" required>
+        <i class='bx bxs-home'></i>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="input-box">
+        <input type="text" name="contact" placeholder="Enter your contact" required>
+        <i class='bx bxs-phone'></i>
+      </div>
+
+      <!-- Role Dropdown -->
+      <div class="input-box">
+        <select name="role" required>
+          <option value="">Select Role</option>
+          <option value="student">Student</option>
+          <option value="institute">Institute</option>
+        </select>
+        <i class='bx bxs-user-detail'></i>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="btn">Sign Up</button>
+
+      <!-- Redirect to Login -->
+      <div class="login-link">
+        <p>Already have an account? <a href="{{ url_for('home') }}">Login</a></p>
+      </div>
+    </form>
+  </div>
+
+</body>
+</html>

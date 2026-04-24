@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Manage Payments - Admin Panel</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="dashboard">
+  
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h2>Admin Panel</h2>
+    <a href="{{ url_for('admin_dashboard') }}">🏠 Dashboard</a>
+    <a href="{{ url_for('manage_users') }}">👤 Manage Users</a>
+    <a href="{{ url_for('manage_papers') }}">📄 Manage Papers</a>
+    <a href="{{ url_for('manage_payments') }}">💳 Manage Payments</a>
+    <a href="{{ url_for('logout') }}">🚪 Logout</a>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="topbar">
+      <div class="welcome"> Welcome, {{ session['user']['name'] }}</div>
+      <div class="actions">
+        <a href="{{ url_for('logout') }}" class="btn-sm">Logout</a>
+      </div>
+    </div>
+
+    <h1>💳 Manage Payments</h1>
+
+    <div class="table-wrap">
+      <div class="header-row">
+        <h3>Payments List</h3>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Payment ID</th>
+            <th>User</th>
+            <th>Email</th>
+            <th>Amount</th>
+            <th>Currency</th>
+            <th>Method</th>
+            <th>Status</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for payment in payments %}
+          <tr>
+            <td>{{ payment.payment_id }}</td>
+            <td>{{ payment.name }}</td>
+            <td>{{ payment.email }}</td>
+            <td>₹{{ payment.amount }}</td>
+            <td>{{ payment.currency }}</td>
+            <td>{{ payment.method }}</td>
+            <td>
+              <span class="status-badge 
+                {% if payment.status == 'success' %} success 
+                {% elif payment.status == 'pending' %} warning 
+                {% else %} danger {% endif %}">
+                {{ payment.status }}
+              </span>
+            </td>
+            <td>{{ payment.created_at }}</td>
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="8">No payments found.</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

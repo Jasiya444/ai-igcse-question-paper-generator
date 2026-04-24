@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Upload Paper - Admin Panel</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="dashboard">
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h2>Admin Panel</h2>
+    <a href="{{ url_for('admin_dashboard') }}">🏠 Dashboard</a>
+    <a href="{{ url_for('manage_users') }}">👤 Manage Users</a>
+    <a href="{{ url_for('manage_papers') }}">📄 Manage Papers</a>
+    <a href="{{ url_for('manage_payments') }}">💳 Manage Payments</a>
+    <a href="{{ url_for('logout') }}">🚪 Logout</a>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="topbar">
+      <div class="welcome">Welcome, {{ session['user']['name'] }}</div>
+      <div class="actions">
+        <a href="{{ url_for('logout') }}" class="btn-sm">Logout</a>
+      </div>
+    </div>
+
+    <h1>📄 Upload Paper</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, msg in messages %}
+          <div class="alert {{ category }}">{{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form action="{{ url_for('upload_paper') }}" method="POST" enctype="multipart/form-data" class="form">
+      <label for="title">Paper Title:</label>
+      <input type="text" id="title" name="title" required>
+
+      <label for="subject">Subject:</label>
+      <input type="text" id="subject" name="subject" required>
+
+      <label for="file">Upload File:</label>
+      <input type="file" id="file" name="file" accept=".pdf,.doc,.docx" required>
+
+      <button type="submit" class="btn primary">Upload</button>
+    </form>
+
+  </div>
+</div>
+</body>
+</html>

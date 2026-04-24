@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Manage Users - Admin Panel</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="dashboard">
+  
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h2>Admin Panel</h2>
+    <a href="{{ url_for('admin_dashboard') }}">🏠 Dashboard</a>
+    <a href="{{ url_for('manage_users') }}">👤 Manage Users</a>
+    <a href="{{ url_for('manage_papers') }}">📄 Manage Papers</a>
+    <a href="{{ url_for('manage_payments') }}">💳 Manage Payments</a>
+    <a href="{{ url_for('logout') }}">🚪 Logout</a>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="topbar">
+      <div class="welcome"> Welcome, {{ session['user']['name'] }}</div>
+      <div class="actions">
+        <a href="{{ url_for('logout') }}" class="btn-sm">Logout</a>
+      </div>
+    </div>
+
+    <h1>👤 Manage Users</h1>
+
+    <div class="table-wrap">
+      <div class="header-row">
+        <h3>User List</h3>
+        <a href="{{ url_for('add_user') }}" class="btn btn-primary">Add User</a>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>User ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Created At</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+          <tr>
+            <td>{{ user['user_id'] }}</td>
+            <td>{{ user['name'] }}</td>
+            <td>{{ user['email'] }}</td>
+            <td>
+              <span class="status-badge">{{ user['role'] }}</span>
+            </td>
+            <td>{{ user['created_at'] }}</td>
+            <td>
+              <a href="{{ url_for('edit_user', user_id=user['user_id']) }}" class="btn-sm">✏ Edit</a>
+              <a href="{{ url_for('delete_user', user_id=user['user_id']) }}" class="btn-sm" onclick="return confirm('Are you sure?')">🗑 Delete</a>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

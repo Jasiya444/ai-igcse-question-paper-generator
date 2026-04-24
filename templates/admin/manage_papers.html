@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Papers - Admin Panel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="dashboard">
+    
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Admin Panel</h2>
+        <a href="{{ url_for('admin_dashboard') }}">🏠 Dashboard</a>
+        <a href="{{ url_for('manage_users') }}">👤 Manage Users</a>
+        <a href="{{ url_for('manage_papers') }}">📄 Manage Papers</a>
+        <a href="{{ url_for('manage_payments') }}">💳 Manage Payments</a>
+        <a href="{{ url_for('logout') }}">🚪 Logout</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="topbar">
+            <div class="welcome"> Welcome, {{ session['user']['name'] }}</div>
+            <div class="actions">
+                <a href="{{ url_for('logout') }}" class="btn-sm">Logout</a>
+            </div>
+        </div>
+
+        <h1>📄 Manage Papers</h1>
+
+
+        <div class="table-wrap">
+            <div class="header-row">
+                <h3>Papers List</h3>
+                <a href="{{ url_for('upload_paper') }}" class="btn-sm">📤 Upload New Paper</a>
+            </div>
+            {% if papers %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Subject</th>
+                        <th>Type</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for paper in papers %}
+                    <tr>
+                        <td>{{ paper.paper_id }}</td>
+                        <td>{{ paper.title }}</td>
+                        <td>{{ paper.subject }}</td>
+                        <td>{{ paper.type }}</td>
+                        <td>{{ paper.sort_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>
+                            
+                            <!-- ⬇️ Download -->
+                            <a href="
+                                {% if paper.type == 'uploaded' %}
+                                    {{ url_for('download_uploaded_paper', paper_id=paper.paper_id) }}
+                                {% else %}
+                                    {{ url_for('download_generated_paper', paper_id=paper.paper_id) }}
+                                {% endif %}
+                            ">⬇️ Download</a>
+                            |
+                            <!-- 🗑 Delete -->
+                            <form method="POST" action="{{ url_for('delete_paper', paper_type=paper.type, paper_id=paper.paper_id) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this paper?')">
+                                <button type="submit">🗑 Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+                <p>No papers found.</p>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+</body>
+</html>
