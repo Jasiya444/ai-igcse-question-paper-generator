@@ -23,7 +23,7 @@ AI-based web application that generates IGCSE-style question papers based on pre
 
 Clone the repository
 
-git clone https://github.com/Jasiya/ai-igcse-question-paper-generator.git
+git clone https://github.com/Jasiya444/ai-igcse-question-paper-generator.git
 
 Install dependencies
 
